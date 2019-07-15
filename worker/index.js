@@ -3,8 +3,8 @@ console.log(keys)
 const redis = require('redis');
 
 const redisClient = redis.createClient({
-  host: keys.redisHost,
-  port: keys.redisPort,
+  host: 'clustermulti-docker-redis.0l33fx.0001.apse1.cache.amazonaws.com',
+  port: 6379,
   retry_strategy: () => 1000
 });
 const sub = redisClient.duplicate();
