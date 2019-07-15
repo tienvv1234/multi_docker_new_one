@@ -26,9 +26,13 @@
 
   // Redis Client Setup
   const redis = require('redis');
+
+  console.log('host: ', keys.redisHost)
+  console.log('port: ', keys.redisPort)
+
   const redisClient = redis.createClient({
-    host: keys.redisHost,
-    port: keys.redisPort,
+    host: 'clustermulti-docker-redis.0l33fx.0001.apse1.cache.amazonaws.com',
+    port: 6379,
     retry_strategy: () => 1000
   });
   const redisPublisher = redisClient.duplicate();
@@ -53,15 +57,16 @@
 
   app.post('/values', async (req, res) => {
     const index = req.body.index;
-
+    console.log(1)
     if (parseInt(index) > 40) {
       return res.status(422).send('Index too high');
     }
 
+    console.log(2);
     redisClient.hset('values', index, 'Nothing yet!');
     redisPublisher.publish('insert', index);
     pgClient.query('INSERT INTO values(number) VALUES($1)', [index]);
-
+    console.log(3);
     res.send({ working: true });
   });
 
